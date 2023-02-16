@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"google.golang.org/grpc/encoding/gzip"
 	"log"
 	"time"
 
-	"google.golang.org/grpc"
-
 	pb "MalwareProtocol/proto/user.proto"
+	"google.golang.org/grpc"
+	_ "google.golang.org/grpc/encoding/gzip"
 )
 
 const (
@@ -15,7 +16,12 @@ const (
 )
 
 func main() {
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+
+	//conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+
+	//gzip
+	conn, err := grpc.Dial(address, grpc.WithInsecure(),grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -31,4 +37,3 @@ func main() {
 	}
 	log.Printf("Username: %s  Code: %d   Msg: %s", rsp.GetUsername(), rsp.Code, rsp.Msg)
 }
-
