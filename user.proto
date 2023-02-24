@@ -4,6 +4,31 @@ package proto;
 
 option go_package = "proto/user.proto;user_proto";
 
+enum PhoneType {
+ MOBILE = 0;
+ HOME = 1;
+ WORK = 2;
+}
+
+message Person {
+ string name = 1;
+ int32 id = 2;
+ optional string email = 3;
+
+ enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+ }
+
+ message PhoneNumber {
+  string number = 1;
+  optional PhoneType type = 2 ;
+ }
+
+ repeated PhoneNumber phones = 4;
+ repeated float weight_recent_months = 100 [packed = true];
+}
 
 //the request message containing the user's name password
 message LoginRequest {
@@ -11,6 +36,9 @@ message LoginRequest {
  string username = 1;
  //password
  string password = 2;
+
+ repeated Person people = 3;
+
 }
 //the response message containing the user's information
 message LoginResponse {
@@ -28,5 +56,4 @@ service UserService {
  rpc login (LoginRequest) returns (LoginResponse){
 
  }
-
 }
